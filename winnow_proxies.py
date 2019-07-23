@@ -9,12 +9,15 @@ import obtain_proxy
 import traceback
 import time
 import random
+import sys
 
 URL = random.choice(constants.TEST_URLS)
 
 def winnow_proxies(timeout=5):
     while(1):
-        print("gettin a new one!")
+        sys.stdout.write("Getting a new one!")
+        sys.stdout.write("\n")
+        sys.stdout.flush()
         proxy_candidates = obtain_proxy.obtain_proxy(constants.PROXY_NET)
         count = 0
         while len(proxy_candidates) > 0 and count < 15:
@@ -26,9 +29,12 @@ def winnow_proxies(timeout=5):
                 r = requests.get(URL,proxies=proxy,timeout=timeout)
                 return proxy
             except Exception as e:
-                #traceback.print_exc()
-                print("fail")
-        print("refreshing")
+                sys.stdout.write("fail")
+                sys.stdout.write("\n")
+                sys.stdout.flush()
+        sys.stdout.write("refreshing. . . ")
+        sys.stdout.write("\n")
+        sys.stdout.flush()
         time.sleep(0.5)
 
 

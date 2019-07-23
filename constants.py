@@ -23,7 +23,9 @@ MANUALLY_SELECTED_USER_AGENTS =['Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_
                                 'Mozilla/5.0 (Linux; Android 7.0; SM-G570M Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Mobile Safari/537.36'
                                 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G930F Build/R16NW; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/74.0.3729.157 Mobile Safari/537.36']
 
-TEST_URLS = ['https://www.billoreilly.com/','https://www.oreillyauto.com/', 'https://www.oreilly.com/','https://www.nestle.com/','http://www.kraftheinzcompany.com/','https://www.breitbart.com/']
+TEST_URLS = ['https://www.billoreilly.com/','https://www.oreillyauto.com/', 'https://www.oreilly.com/','https://www.nestle.com/',
+             'http://www.kraftheinzcompany.com/','https://www.breitbart.com/','https://www.msnbc.com/','https://www.rushlimbaugh.com/',
+             'https://www.berkeley.edu/','https://www.youtube.com/']
 
 
 PROXY_NET = 'https://free-proxy-list.net/'

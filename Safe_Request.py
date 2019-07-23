@@ -12,6 +12,7 @@ import requests
 import constants
 import random
 import traceback
+import sys
 
 import obtain_headers
 import winnow_proxies
@@ -20,13 +21,14 @@ import time
 
 class Safe_Requester:
 
-    def __init__(self,times,timeout=5,error_log_name="Safe_request_error_log"):
+    def __init__(self,times,timeout=5,error_log_name="Safe_request_error_log",verify=True):
 
         self.count = 0
         self.header = None
         self.proxy = None
         self.timeout = timeout
         self.error_log_name = error_log_name
+        self.verify = verify
 
         if times < 1:
             self.times = 1
@@ -58,7 +60,11 @@ class Safe_Requester:
         while keep_going:
             time.sleep(2)
             try:
-                print("all right, trying it again")
+
+                sys.stdout.write("all right, trying it again")
+                sys.stdout.write("\n")
+                sys.stdout.flush()
+
                 with requests.Session() as s:
                     answer = s.get(URL,proxies=self.proxy,headers=self.header,verify=verify)
                 self.count += 1
@@ -68,24 +74,33 @@ class Safe_Requester:
                     self.reset_header()
                     self.reset_proxy()
                 keep_going = False
-                print("Success! You got a request finally!")
+                sys.stdout.write("Success! You got a request finally!")
+                sys.stdout.write("\n")
+                sys.stdout.flush()
             except Exception as e:
-                print("Problem with request. Resetting proxy")
-                traceback.print_exc()
-                print("Problem reported. Moving on.")
+                sys.stdout.write("Problem with request. Resetting proxy.")
+                sys.stdout.write("\n")
+                sys.stdout.write(traceback.format_exception_only(type(e),e)[0])
+                sys.stdout.write("Problem reported. Moving on.")
+                sys.stdout.write("\n")
+                sys.stdout.flush()
                 self.count = 0
                 self.reset_header()
                 self.reset_proxy()
-                print("Now we're trying this as our proxy : %s"%self.proxy)
-
+                sys.stdout.write("Now we're trying this as our proxy : %s"%self.proxy)
+                sys.stdout.write("\n")
+                sys.stdout.flush()
                 if try_count == 5:
                     keep_going = False
-                    print("I GIVE UP ON THIS URL : %s"%URL)
+                    sys.stdout.write("I GIVE UP ON THIS URL : %s"%URL)
+                    sys.stdout.write("\n")
+                    sys.stdout.flush()
                     file = open("%s"%self.error_log_name, "a")
                     file.write("%s\n"%URL)
                     file.close()
 
                 try_count +=1
-                print("This url, %s has been tried %s times"%(URL,try_count))
-
+                sys.stdout.write("This url, %s has been tried %s times"%(URL,try_count))
+                sys.stdout.write("\n")
+                sys.stdout.flush()
         return answer
