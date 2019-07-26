@@ -2,10 +2,11 @@
 Using the code I've written in the rest of the library, this
 script will create a safe request to whatever URL.
 
-It's two main fields are times, and timeout.
+It's three main fields are times, timeout and proxy_timeout.
 
 Times is how many times a request will be made with the same header and proxy before switching.
-timeout is how long you wait fore a connection timeout when testing the different proxies.
+timeout is how long you wait before giving up on a request to a certain URL.
+proxy_timeout is how long you wait for a connection timeout when testing the different proxies.
 """
 
 import requests
@@ -21,12 +22,13 @@ import time
 
 class Safe_Requester:
 
-    def __init__(self,times,timeout=5,error_log_name="Safe_request_error_log",verify=True):
+    def __init__(self,times,timeout=20,proxy_timeout=5,error_log_name="Safe_request_error_log",verify=True):
 
         self.count = 0
         self.header = None
         self.proxy = None
         self.timeout = timeout
+        self.proxy_timeout = proxy_timeout
         self.error_log_name = error_log_name
         self.verify = verify
 
@@ -45,7 +47,7 @@ class Safe_Requester:
         #self.header = random.choice(obtain_headers.obtain_headers(random.choice(constants.HEADERS)))
         self.header = {'User-Agent' : random.choice(constants.MANUALLY_SELECTED_USER_AGENTS)}
     def reset_proxy(self):
-        self.proxy = winnow_proxies.winnow_proxies(timeout=self.timeout)
+        self.proxy = winnow_proxies.winnow_proxies(timeout=self.proxy_timeout)
 
 
     def SR(self,URL,verify=True):
@@ -61,18 +63,43 @@ class Safe_Requester:
             time.sleep(2)
             try:
 
-                sys.stdout.write("all right, trying it again")
+                sys.stdout.write("all right, trying it again .1")
                 sys.stdout.write("\n")
                 sys.stdout.flush()
 
                 with requests.Session() as s:
-                    answer = s.get(URL,proxies=self.proxy,headers=self.header,verify=verify)
+                    # I think that this is timing out, or something. There has to be a way of fixing this, imo . . .
+                    answer = s.get(URL,proxies=self.proxy,headers=self.header,verify=verify,timeout=self.timeout)
+
+                sys.stdout.write("all right, trying it again .2")
+                sys.stdout.write("\n")
+                sys.stdout.flush()
+
+
                 self.count += 1
+
+                sys.stdout.write("all right, trying it again .3")
+                sys.stdout.write("\n")
+                sys.stdout.flush()
+
                 # after a while, you should switch IP's and Headers.
                 if self.count >= self.times:
+                    sys.stdout.write("all right, trying it again .4")
+                    sys.stdout.write("\n")
+                    sys.stdout.flush()
+
                     self.count = 0
                     self.reset_header()
                     self.reset_proxy()
+
+                    sys.stdout.write("all right, trying it again .5")
+                    sys.stdout.write("\n")
+                    sys.stdout.flush()
+
+                sys.stdout.write("all right, trying it again .6")
+                sys.stdout.write("\n")
+                sys.stdout.flush()
+
                 keep_going = False
                 sys.stdout.write("Success! You got a request finally!")
                 sys.stdout.write("\n")

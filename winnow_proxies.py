@@ -20,7 +20,7 @@ def winnow_proxies(timeout=5):
         sys.stdout.flush()
         proxy_candidates = obtain_proxy.obtain_proxy(constants.PROXY_NET)
         count = 0
-        while len(proxy_candidates) > 0 and count < 15:
+        while len(proxy_candidates) > 0 and count < 30:
             print(len(proxy_candidates))
             try:
                 count += 1

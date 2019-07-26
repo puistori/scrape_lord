@@ -9,9 +9,9 @@ You must give it the following:
     ## fix with kwargs?
  2. The name of the file containing the scraping assignment.
     The scraping assignment must be a pickled list.
- 3. Options and parametrs for the Safe_Request object
-    This means 'times' and 'timeout'  which respectively manage how many iterations are used
-    with the same proxy and how long you'll wait on a proxy to respond before
+ 3. Options and parameters for the Safe_Request object
+    This means 'times' 'timeout' and 'proxy_timeout'  which respectively manage how many iterations are used
+    with the same proxy, how long you'll wait for a request to resolve, and how long you'll wait on a proxy to respond before
     skipping to another one.
 4. outputname. this will govern the name of your output, as well as your error logs.
     The output name should NOT have any file extensions in it (don't say .txt, we'll take care of that)
@@ -22,6 +22,9 @@ You must give it the following:
    !!! If you are appending to a pickled object, the pickled object must be a string, list or dictionary.
 6. assignment_type - is the assignment a text file or is it a list stored in bytes? 'rt' and 'rb' are the arguments you want.
 
+
+!!! Also, a word to the wise - for the emergency save feature to work, you probably need to run this from a command line
+like the bash command line. That's because they signal that an IDE like mine (pycharm) gives is uncatchable.
 
 """
 
@@ -47,7 +50,7 @@ warnings.showwarning = myWarning
 
 
 
-def sweep(scrape_function,scraping_assignment,output_name,times=50,timeout=5,
+def sweep(scrape_function,scraping_assignment,output_name,times=50,timeout=20,proxy_timeout=5,
           write_type="wt",append=True,delim="\n",sleep_time=1,verify=True,assignment_type='rt'):
 
     sys.stdout.write("Starting sweep up!")
@@ -83,7 +86,8 @@ def sweep(scrape_function,scraping_assignment,output_name,times=50,timeout=5,
 
 
     # Creating Safe_Requester object
-    requester = Safe_Request.Safe_Requester(times=times,timeout=timeout,error_log_name=error_log_name,verify=verify)
+    requester = Safe_Request.Safe_Requester(times=times,timeout=timeout,proxy_timeout=proxy_timeout,
+                                            error_log_name=error_log_name,verify=verify)
 
     #Loading in scraping assignment
     if assignment_type == 'rt':
@@ -119,12 +123,13 @@ def sweep(scrape_function,scraping_assignment,output_name,times=50,timeout=5,
 
         # Giving a progress report first. How far along are we?
         try:
-            percent_completed = count / assignment_length
+            percent_completed = str ( (count / assignment_length) * 100 )
+            
             time_spent = time.time() - start_time
             if percent_completed > 0:
 
                 hr1, min1, sec1 = time_parser.parse_time(time_spent)
-                hr2,min2,sec2 = time_parser.parse_time(time_spent/percent_completed)
+                hr2,min2,sec2 = time_parser.parse_time((time_spent/percent_completed)-time_spent)
                 sys.stdout.write(("%s percent of the way done ; %s down and %s to go. "
                         "\n  You have spent %s hours, %s minutes and %s seconds scraping. "
                         "\n At this rate, you will be done in %s hours, %s minutes and %s seconds."
