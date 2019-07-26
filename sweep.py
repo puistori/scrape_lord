@@ -123,8 +123,8 @@ def sweep(scrape_function,scraping_assignment,output_name,times=50,timeout=20,pr
 
         # Giving a progress report first. How far along are we?
         try:
-            percent_completed = str ( (count / assignment_length) * 100 )
-            
+            percent_completed =  (count / assignment_length) * 100
+
             time_spent = time.time() - start_time
             if percent_completed > 0:
 
