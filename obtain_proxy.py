@@ -12,7 +12,7 @@ import constants
 # This takes a proxy string and turns it into a dictionary so that it could be
 # used as an argument in requests.get()
 def format(answer):
-    return {'https' : answer}
+    return {'https' : 'http://' + answer}
 
 def obtain_proxy(URL):
     answers = []
